@@ -13,7 +13,8 @@ class GeneticAlgorithmBase(ABC):
             num_generations,
             crosssover_prob=0.9,
             mutation_prob=0.05,
-            early_stop_fitness=None):
+            early_stop_fitness=None,
+            verbose=False):
         
         super().__init__()
 
@@ -32,21 +33,24 @@ class GeneticAlgorithmBase(ABC):
         self._crossover_prob = crosssover_prob
         self._mutation_prob = mutation_prob
         self._early_stop_fitness = early_stop_fitness
+        self._verbose = verbose
 
     def evolve(self):
         population = np.random.randint(2, size=(self._population_size, self._chromosomes_size))
 
-        for _ in np.arange(self._num_generations):
-            if population.shape[0] == 0:
-                return None
+        for num_generation in np.arange(self._num_generations):
+            self._log_output(f'===============\nGeneration: {num_generation + 1}')
 
             # Early stop if configured.
             if self._early_stop_fitness is not None:
                 fittest_solution = next(
-                    (item for item in self._population_size if self._get_fitness(item) > self._fitness_threshold),
+                    (item for item in population if self._get_fitness(item) > self._early_stop_fitness),
                     None
                 )
                 if fittest_solution is not None:
+                    self._log_output(f'Early stopping. Fittest chromosome: {fittest_solution}. '
+                                   + f'Fenotype: {self.get_fenotype(fittest_solution)}. '
+                                   + f'Aptitude: {self._get_fitness(fittest_solution)}')
                     return fittest_solution
 
             # Selection.
@@ -56,17 +60,22 @@ class GeneticAlgorithmBase(ABC):
             descendents = []
             for i in np.arange(parents.shape[0] - 1, step=2):
                 descendent1, descendent2 = self._crossover(parents[i], parents[i + 1])
-                descendents += [descendent1, descendent2]
+                descendents.extend([descendent1, descendent2])
 
             # Mutation.
             mutated_descendents = []
             for i, descendent in enumerate(descendents):
-                mutated_descendents += [self._mutate(descendent)]
+                mutated_descendents.extend([self._mutate(descendent)])
             population = np.array(mutated_descendents)
 
-        # Return the fittest.
-        idx = np.argmax(np.array([self._get_fitness(chromosome) for chromosome in population]))
-        return population[idx]
+            # Get the fittest.
+            idx = np.argmax(np.array([self._get_fitness(chromosome) for chromosome in population]))
+            fittest_solution = population[idx]
+            self._log_output(f'Fittest chromosome: {fittest_solution}. '
+                       + f'Fenotype: {self.get_fenotype(fittest_solution)}. '
+                       + f'Aptitude: {self._get_fitness(fittest_solution)}\n===============\n')
+
+        return fittest_solution
 
     @abstractmethod
     def get_fenotype(self, chromosome):
@@ -107,17 +116,17 @@ class GeneticAlgorithmBase(ABC):
         
         # Generate as many uniformly distributed numbers as chromosomes the population has.
         # Make the selection.
-        result = set()
+        result = []
         rands = np.random.uniform(size=population_size)
         for rand in rands:
             previous_acum_prob = 0
             for j, acum_prob in enumerate(selection_acum_probs):
                 if previous_acum_prob < rand < acum_prob:
-                    result.add(tuple(population[j]))
+                    result.append(population[j])
                     break
                 previous_acum_prob = acum_prob
 
-        return np.array(list(result), dtype='int')
+        return np.array(result, dtype='int')
 
     def _select_parents_by_ts(self, population):
         pass
@@ -150,6 +159,10 @@ class GeneticAlgorithmBase(ABC):
                 chromosome[idx] = 0 if allele == 1 else 1
         return chromosome
 
+    def _log_output(self, message):
+        if self._verbose == True:
+            print(message)
+
 class SelectionType(Enum):
     RWS = 1 # Roulette Wheel Selection aka Fitness Proportionate Selection (FPS)
     TS = 2  # Tournament Selection
@@ -162,6 +175,7 @@ class CrossoverType(Enum):
 
 if __name__ == '__main__':
     
+    # Use case example: Minimize x^2.
     class GeneticX2(GeneticAlgorithmBase):
         def __init__(self):
             super().__init__(
@@ -169,16 +183,16 @@ if __name__ == '__main__':
                 chromosomes_size=5,
                 selection_type=SelectionType.RWS,
                 crossover_type=CrossoverType.SinglePoint,
-                num_generations=20,
-                mutation_prob=0.05)
+                num_generations=30,
+                mutation_prob=0.05,
+                early_stop_fitness=0.999,
+                verbose=True)
             
         def get_fenotype(self, chromosome):
             return int(''.join(chromosome.astype(str)), 2)
 
         def _get_fitness(self, chromosome):
-            return self.get_fenotype(chromosome) ** 2
+            return 1 / (self.get_fenotype(chromosome) ** 2 + 1)
             
     genetic_x2 = GeneticX2()
     solution = genetic_x2.evolve()
-    print(solution)
-    print(genetic_x2.get_fenotype(solution))

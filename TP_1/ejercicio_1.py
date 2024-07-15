@@ -9,21 +9,28 @@ consola.
 
 import numpy as np
 
-size = 20
-threshold = 0.09
+NUM_GENES = 5
+POPULATION_SIZE = 20
+MUTATION_THRESHOLD = 0.09
 
-a = np.random.choice(['0', '1'], size)
-b = np.random.uniform(0.0, 1.0, size)
-c = np.array(list(
-    ('0'
-     if x == '1' and y < threshold
-     else ('1'
-           if x == '0' and y < threshold
-           else x)
-    for x, y in zip(a, b))
-))
+def mutate(chromosome, mutation_prob, mutation_threshold):
+    if mutation_prob < mutation_threshold:
+        idx_to_mutate = np.random.randint(chromosome.shape[0])
+        chromosome[idx_to_mutate] = '0' if chromosome[idx_to_mutate] == '1' else '1'
+        return chromosome
+    else:
+        return None
 
-print('Vector binario string A: ', a)
+a = np.array(list(np.random.choice(['0', '1'], NUM_GENES) for _ in np.arange(POPULATION_SIZE)))
+b = np.random.uniform(0.0, 1.0, POPULATION_SIZE)
+c = {}
+for i, (a_i, b_i) in enumerate(zip(a, b)):
+    mutated = mutate(a_i, b_i, MUTATION_THRESHOLD)
+    if mutated is not None:
+        c[i] = mutated
+
+print('Cromosomas A:', a)
 print('\nVector aleatorio en intervalo (0, 1) B:', b)
-print('\nVector C. Su i-ésima fila es el alelo correspondiente de A mutado ' +
-      'si su correspondiente en B es menor a 0.09 o dicho alelo sin mutar en caso contrario:', c)
+print('\nCromosomas mutados C:')
+for k, v in c.items():
+    print(f'Cromosoma mutado en índice {k} de la población: {v}')

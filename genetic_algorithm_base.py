@@ -186,6 +186,5 @@ if __name__ == '__main__':
         selection_type=SelectionType.RWS,
         crossover_type=CrossoverType.SinglePoint,
         num_generations=30,
-        mutation_prob=0.05,
         early_stop_fitness=0.999,
         verbose=True)

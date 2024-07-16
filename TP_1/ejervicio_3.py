@@ -16,7 +16,7 @@ class GeneticGFunction(GeneticAlgorithmBase):
         return 10
 
     def get_fenotype(self, chromosome):
-        return round(self._chromosomes_size * int(''.join(chromosome.astype(str)), 2) / (2**10 - 1), 2)
+        return round(self._chromosomes_size * int(''.join(chromosome.astype(str)), 2) / (2**self._chromosomes_size - 1), 2)
     
     def _get_fitness(self, chromosome):
         c = self.get_fenotype(chromosome)

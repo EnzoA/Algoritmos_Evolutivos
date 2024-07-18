@@ -25,19 +25,26 @@ class GeneticGFunction(GeneticAlgorithmBase):
     def _get_fitness(self, chromosome):
         return g(self.get_fenotype(chromosome))
 
+# a. Encontrar el valor aproximado de c para el cual g es máximo. Utilizar precisión de 2 decimales.
+# b. Transcribir el algoritmo genético comentando brevemente las secciones de código que sean relevantes.
+#    NOTA: El código se halla autodocumentado (y comentado en las secciones del código lo ameritan) en la
+#    definición de la clase base GeneticAlgorithmBase.
 genetic_g_function = GeneticGFunction()
 solution = genetic_g_function.evolve(
-    population_size=200,
-    selection_type=SelectionType.RWS,
+    population_size=100,
+    selection_type=SelectionType.TS,
     crossover_type=CrossoverType.SinglePoint,
-    num_generations=4000,
+    num_generations=1000,
     crosssover_prob=0.85,
     mutation_prob=0.07,
     verbose=True
 )
 solution_fenotype = genetic_g_function.get_fenotype(solution)
 
-x = np.linspace(0, 10, 400)
+# c. Graficar g en función de c en el intervalo [-1, 20] y agregar un punto rojo en la gráfica
+#    en donde el algoritmo haya encontrado el valor máximo. El gráfico debe contener título,
+#    leyenda y etiquetas en los ejes.
+x = np.linspace(-1, 20, 400)
 y = g(x)
 plt.figure(figsize=(8, 6))
 plt.plot(x, y)
@@ -56,3 +63,6 @@ plt.legend()
 
 plt.grid(True)
 plt.show()
+
+# d. Graficar las mejores aptitudes encontradas en función de cada generación.
+# El gráfico debe contener título, leyenda y etiquetas en los ejes.

@@ -126,7 +126,7 @@ class GeneticAlgorithmBase(ABC):
 
     def _select_parents_by_ts(self, population):
         population_size = population.shape[0]
-        tournament_size = max(2, int(0.1 * population_size)) 
+        tournament_size = min(4, int(population_size)) 
         population_indices = np.arange(population_size)
         result = []
 

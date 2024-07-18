@@ -1,8 +1,12 @@
 import sys
 import os
-
+import numpy as np
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from genetic_algorithm_base import GeneticAlgorithmBase, SelectionType, CrossoverType
+from matplotlib import pyplot as plt
+
+def g(c):
+    return 2*c / (4 + 0.8*c + c**2 + 0.2*c**3)
 
 class GeneticGFunction(GeneticAlgorithmBase):
 
@@ -19,16 +23,36 @@ class GeneticGFunction(GeneticAlgorithmBase):
         return round(self._chromosomes_size * int(''.join(chromosome.astype(str)), 2) / (2**self._chromosomes_size - 1), 2)
     
     def _get_fitness(self, chromosome):
-        c = self.get_fenotype(chromosome)
-        return 2*c / (4 + 0.8*c + c**2 + 0.2*c**3)
+        return g(self.get_fenotype(chromosome))
 
 genetic_g_function = GeneticGFunction()
-genetic_g_function.evolve(
+solution = genetic_g_function.evolve(
     population_size=200,
     selection_type=SelectionType.RWS,
     crossover_type=CrossoverType.SinglePoint,
-    num_generations=3000,
+    num_generations=4000,
     crosssover_prob=0.85,
     mutation_prob=0.07,
     verbose=True
 )
+solution_fenotype = genetic_g_function.get_fenotype(solution)
+
+x = np.linspace(0, 10, 400)
+y = g(x)
+plt.figure(figsize=(8, 6))
+plt.plot(x, y)
+plt.scatter(solution_fenotype, g(solution_fenotype), color='red', zorder=5)
+plt.text(
+    solution_fenotype,
+    g(solution_fenotype),
+    f'Solución hallada en ({solution_fenotype}, {g(solution_fenotype)})',
+    fontsize=12,
+    ha='right')
+
+plt.xlabel('c')
+plt.ylabel('g')
+plt.title('Tasa de crecimiento g en función de la concentración c')
+plt.legend()
+
+plt.grid(True)
+plt.show()

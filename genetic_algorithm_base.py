@@ -125,7 +125,20 @@ class GeneticAlgorithmBase(ABC):
         return np.array(result, dtype='int')
 
     def _select_parents_by_ts(self, population):
-        pass
+        population_size = population.shape[0]
+        tournament_size = max(2, int(0.1 * population_size)) 
+        population_indices = np.arange(population_size)
+        result = []
+
+        for _ in population:
+            random_selection = population[np.random.choice(population_indices, tournament_size, replace=False)]
+            best_index = 0
+            for i in np.arange(random_selection.shape[0]):
+                if self._get_fitness(random_selection[i]) > self._get_fitness(random_selection[best_index]):
+                    best_index = i
+            result.append(population[best_index])
+
+        return np.array(result, dtype='int')
 
     def _select_parents_by_lrs(self, population):
         pass

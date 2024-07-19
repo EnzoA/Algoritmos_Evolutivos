@@ -26,6 +26,7 @@ class GeneticAlgorithmBase(ABC):
         assert mutation_prob > 0, 'mutation_prob must be greater than 0'
 
         population = np.random.randint(2, size=(population_size, self._chromosomes_size))
+        fittests_by_generation = []
 
         for num_generation in np.arange(num_generations):
             self._log_output(f'===============\nGeneration: {num_generation + 1}', verbose)
@@ -41,7 +42,8 @@ class GeneticAlgorithmBase(ABC):
                                    + f'Fenotype: {self.get_fenotype(fittest_solution)}. '
                                    + f'Aptitude: {self._get_fitness(fittest_solution)}',
                                    verbose)
-                    return fittest_solution
+                    fittests_by_generation.append(fittest_solution)
+                    return fittests_by_generation
 
             # Selection.
             parents = self._select_parents(population, selection_type)
@@ -61,12 +63,13 @@ class GeneticAlgorithmBase(ABC):
             # Get the fittest.
             idx = np.argmax(np.array([self._get_fitness(chromosome) for chromosome in population]))
             fittest_solution = population[idx]
+            fittests_by_generation.append(fittest_solution)
             self._log_output(f'Fittest chromosome: {fittest_solution}. '
                        + f'Fenotype: {self.get_fenotype(fittest_solution)}. '
                        + f'Aptitude: {self._get_fitness(fittest_solution)}\n===============\n',
                        verbose)
 
-        return fittest_solution
+        return fittests_by_generation
 
     @property
     @abstractmethod
@@ -201,7 +204,7 @@ if __name__ == '__main__':
             
     genetic_x2 = GeneticX2()
 
-    solution = genetic_x2.evolve(
+    genetic_x2.evolve(
         population_size=4,
         selection_type=SelectionType.RWS,
         crossover_type=CrossoverType.SinglePoint,

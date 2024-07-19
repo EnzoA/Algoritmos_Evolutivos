@@ -1,5 +1,6 @@
 import sys
 import os
+import random
 import numpy as np
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from genetic_algorithm_base import GeneticAlgorithmBase, SelectionType, CrossoverType
@@ -30,39 +31,48 @@ class GeneticGFunction(GeneticAlgorithmBase):
 #    NOTA: El código se halla autodocumentado (y comentado en las secciones del código lo ameritan) en la
 #    definición de la clase base GeneticAlgorithmBase.
 genetic_g_function = GeneticGFunction()
-solution = genetic_g_function.evolve(
+fittests_by_generation = genetic_g_function.evolve(
     population_size=100,
     selection_type=SelectionType.TS,
     crossover_type=CrossoverType.SinglePoint,
-    num_generations=1000,
+    num_generations=500,
     crosssover_prob=0.85,
     mutation_prob=0.07,
     verbose=True
 )
-solution_fenotype = genetic_g_function.get_fenotype(solution)
+
+def plot_genetic_run_results(fittest, fittests_by_generation):
+    x = np.linspace(-1, 20, 400)
+    y = g(x)
+    plt.figure(figsize=(8, 6))
+    plt.plot(x, y)
+    if fittest is not None:
+        solution_fenotype = genetic_g_function.get_fenotype(fittest)
+        plt.scatter(solution_fenotype, g(solution_fenotype), color='red', zorder=5)
+        plt.text(
+            solution_fenotype,
+            g(solution_fenotype),
+            f'Solución hallada en ({solution_fenotype}, {g(solution_fenotype)})',
+            fontsize=12,
+            ha='right')
+    if fittests_by_generation is not None:
+        for f in random.sample(fittests_by_generation, k=15):
+            fenotype = genetic_g_function.get_fenotype(f)
+            plt.scatter(fenotype, g(fenotype), color='green', zorder=5)
+    plt.xlabel('c')
+    plt.ylabel('g')
+    plt.title('Tasa de crecimiento g en función de la concentración c')
+    plt.legend()
+
+    plt.grid(True)
+    plt.show()
 
 # c. Graficar g en función de c en el intervalo [-1, 20] y agregar un punto rojo en la gráfica
 #    en donde el algoritmo haya encontrado el valor máximo. El gráfico debe contener título,
 #    leyenda y etiquetas en los ejes.
-x = np.linspace(-1, 20, 400)
-y = g(x)
-plt.figure(figsize=(8, 6))
-plt.plot(x, y)
-plt.scatter(solution_fenotype, g(solution_fenotype), color='red', zorder=5)
-plt.text(
-    solution_fenotype,
-    g(solution_fenotype),
-    f'Solución hallada en ({solution_fenotype}, {g(solution_fenotype)})',
-    fontsize=12,
-    ha='right')
-
-plt.xlabel('c')
-plt.ylabel('g')
-plt.title('Tasa de crecimiento g en función de la concentración c')
-plt.legend()
-
-plt.grid(True)
-plt.show()
+plot_genetic_run_results(fittest=fittests_by_generation[-1], fittests_by_generation=None)
 
 # d. Graficar las mejores aptitudes encontradas en función de cada generación.
 # El gráfico debe contener título, leyenda y etiquetas en los ejes.
+# solution_fenotype = genetic_g_function.get_fenotype(fittests_by_generation[-1])
+plot_genetic_run_results(fittest=None, fittests_by_generation=fittests_by_generation)

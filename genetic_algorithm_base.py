@@ -9,7 +9,6 @@ class GeneticAlgorithmBase(ABC):
 
     def evolve(
             self,
-            chromosomes_size,
             population_size,
             selection_type,
             crossover_type,
@@ -19,14 +18,15 @@ class GeneticAlgorithmBase(ABC):
             early_stop_fitness=None,
             verbose=False):
 
-        assert chromosomes_size > 0, 'population_size must be greater than 0'
+        assert self._chromosomes_size > 0, 'population_size must be greater than 0'
         assert population_size > 0, 'population_size must be greater than 0'
         assert selection_type is not None, 'selection_type is required'
         assert crossover_type is not None, 'crosover_type is required'
         assert crosssover_prob > 0, 'crosssover_prob must be greater than 0'
         assert mutation_prob > 0, 'mutation_prob must be greater than 0'
 
-        population = np.random.randint(2, size=(population_size, chromosomes_size))
+        population = np.random.randint(2, size=(population_size, self._chromosomes_size))
+        fittests_by_generation = []
 
         for num_generation in np.arange(num_generations):
             self._log_output(f'===============\nGeneration: {num_generation + 1}', verbose)
@@ -42,7 +42,8 @@ class GeneticAlgorithmBase(ABC):
                                    + f'Fenotype: {self.get_fenotype(fittest_solution)}. '
                                    + f'Aptitude: {self._get_fitness(fittest_solution)}',
                                    verbose)
-                    return fittest_solution
+                    fittests_by_generation.append(fittest_solution)
+                    return fittests_by_generation
 
             # Selection.
             parents = self._select_parents(population, selection_type)
@@ -62,12 +63,18 @@ class GeneticAlgorithmBase(ABC):
             # Get the fittest.
             idx = np.argmax(np.array([self._get_fitness(chromosome) for chromosome in population]))
             fittest_solution = population[idx]
+            fittests_by_generation.append(fittest_solution)
             self._log_output(f'Fittest chromosome: {fittest_solution}. '
                        + f'Fenotype: {self.get_fenotype(fittest_solution)}. '
                        + f'Aptitude: {self._get_fitness(fittest_solution)}\n===============\n',
                        verbose)
 
-        return fittest_solution
+        return fittests_by_generation
+
+    @property
+    @abstractmethod
+    def _chromosomes_size(self):
+        pass
 
     @abstractmethod
     def get_fenotype(self, chromosome):
@@ -121,7 +128,20 @@ class GeneticAlgorithmBase(ABC):
         return np.array(result, dtype='int')
 
     def _select_parents_by_ts(self, population):
-        pass
+        population_size = population.shape[0]
+        tournament_size = min(4, int(population_size)) 
+        population_indices = np.arange(population_size)
+        result = []
+
+        for _ in population:
+            random_selection = population[np.random.choice(population_indices, tournament_size, replace=False)]
+            best_index = 0
+            for i in np.arange(random_selection.shape[0]):
+                if self._get_fitness(random_selection[i]) > self._get_fitness(random_selection[best_index]):
+                    best_index = i
+            result.append(population[best_index])
+
+        return np.array(result, dtype='int')
 
     def _select_parents_by_lrs(self, population):
         pass
@@ -171,6 +191,10 @@ if __name__ == '__main__':
     class GeneticX2(GeneticAlgorithmBase):
         def __init__(self):
             super().__init__()
+        
+        @property
+        def _chromosomes_size(self):
+            return 5
             
         def get_fenotype(self, chromosome):
             return int(''.join(chromosome.astype(str)), 2)
@@ -180,9 +204,8 @@ if __name__ == '__main__':
             
     genetic_x2 = GeneticX2()
 
-    solution = genetic_x2.evolve(
+    genetic_x2.evolve(
         population_size=4,
-        chromosomes_size=5,
         selection_type=SelectionType.RWS,
         crossover_type=CrossoverType.SinglePoint,
         num_generations=30,

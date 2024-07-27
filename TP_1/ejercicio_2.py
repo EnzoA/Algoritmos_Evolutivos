@@ -25,4 +25,6 @@ genetic_x2.evolve(
         crossover_type=CrossoverType.SinglePoint,
         num_generations=10,
         early_stop_fitness=999,
+        crosssover_prob=0.92,
+        mutation_prob=0.01,
         verbose=True)

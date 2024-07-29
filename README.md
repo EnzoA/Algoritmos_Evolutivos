@@ -4,3 +4,6 @@ Un repositorio dedicado a trabajos prácticos para la materia Algoritmos Evoluti
 ### Autores:
 - Cristina Jeanneth Arrollo Huerta - jcrisarh@gmail.com
 - Enzo Javier Andreetto - enzo.andreetto@gmail.com
+
+### Repositorio:
+https://github.com/EnzoA/Algoritmos_Evolutivos

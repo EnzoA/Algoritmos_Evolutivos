@@ -28,7 +28,7 @@ class GeneticGFunction(GeneticAlgorithmBase):
 
 # a. Encontrar el valor aproximado de c para el cual g es máximo. Utilizar precisión de 2 decimales.
 # b. Transcribir el algoritmo genético comentando brevemente las secciones de código que sean relevantes.
-#    NOTA: El código se halla autodocumentado (y comentado en las secciones del código lo ameritan) en la
+#    NOTA: El código se halla autodocumentado (y comentado en las secciones del código que lo ameritan) en la
 #    definición de la clase base GeneticAlgorithmBase.
 genetic_g_function = GeneticGFunction()
 fittests_by_generation = genetic_g_function.evolve(

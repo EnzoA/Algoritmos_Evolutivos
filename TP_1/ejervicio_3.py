@@ -70,7 +70,8 @@ def plot_genetic_run_results(fittest, fittests_by_generation):
 # c. Graficar g en función de c en el intervalo [-1, 20] y agregar un punto rojo en la gráfica
 #    en donde el algoritmo haya encontrado el valor máximo. El gráfico debe contener título,
 #    leyenda y etiquetas en los ejes.
-plot_genetic_run_results(fittest=fittests_by_generation[-1], fittests_by_generation=None)
+fittest_idx = np.argmax([g(genetic_g_function.get_fenotype(f)) for f in fittests_by_generation])
+plot_genetic_run_results(fittest=fittests_by_generation[fittest_idx], fittests_by_generation=None)
 
 # d. Graficar las mejores aptitudes encontradas en función de cada generación.
 # El gráfico debe contener título, leyenda y etiquetas en los ejes.

@@ -1,4 +1,11 @@
 import numpy as np
+from enum import Enum
+from matplotlib import pyplot as plt
+
+class OptimizationCriteria(Enum):
+    Minimize = 1
+    Maximize = 2
+
 
 def pso(objective_function,
         num_dimensions,
@@ -9,6 +16,7 @@ def pso(objective_function,
         w,
         inferior_limit,
         superior_limit,
+        optimization_criteria,
         verbose=False):
     
     # Positions and velocities initialization.
@@ -45,13 +53,17 @@ def pso(objective_function,
             # Evaluate the particle's fitness to get the new position.
             fitness = objective_function(*[particles[i, j] for j in range(num_dimensions)])
 
-            if fitness > fitness_pbest[i]:
+            if (fitness > fitness_pbest[i]
+                if optimization_criteria == OptimizationCriteria.Maximize
+                else fitness < fitness_pbest[i]):
                 # Update the personal best.
                 fitness_pbest[i] = fitness
                 pbest[i] = particles[i].copy()
 
                 # Update the global best.
-                if fitness > fitness_gbest:
+                if (fitness > fitness_gbest
+                    if optimization_criteria == OptimizationCriteria.Maximize
+                    else fitness < fitness_gbest):
                     fitness_gbest = fitness
                     gbest = particles[i].copy()
 
@@ -67,3 +79,10 @@ def pso(objective_function,
 
     # Return the global best, its fitness and the history of gbests by iteration.
     return gbest, fitness_gbest, gbest_by_iteration
+
+def plot_gbests_by_iteration(gbest_by_iteration, num_particles):
+    plt.plot(np.arange(0, len(gbest_by_iteration)), gbest_by_iteration)
+    plt.xlabel('Número de iteración')
+    plt.ylabel('gbest')
+    plt.title(f'gbest hallado en cada iteración con {num_particles} partículas')
+    plt.show()

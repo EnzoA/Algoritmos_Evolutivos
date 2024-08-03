@@ -10,7 +10,7 @@ import sys
 import os
 import numpy as np
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from particle_swarm_optimization_algorithm import pso
+from particle_swarm_optimization_algorithm import pso, OptimizationCriteria, plot_gbests_by_iteration
 from matplotlib import pyplot as plt
 
 objective_function = lambda x: np.sin(x) + np.sin(x**2)
@@ -22,6 +22,7 @@ c2 = 1.49
 w = 0.5
 inferior_limit = 0
 superior_limit = 10
+optimization_criteria = OptimizationCriteria.Maximize
 verbose = True
 
 gbest, value, gbest_by_iteration = pso(
@@ -34,6 +35,7 @@ gbest, value, gbest_by_iteration = pso(
     w,
     inferior_limit,
     superior_limit,
+    optimization_criteria,
     verbose)
 
 '''
@@ -71,13 +73,6 @@ plot_pso_result(objective_function, gbest, num_particles)
 '''
 D. Realizar un gráfico de línea que muestre gbest en función de las iteraciones realizadas.
 '''
-def plot_gbests_by_iteration(gbest_by_iteration, num_particles):
-    plt.plot(np.arange(0, len(gbest_by_iteration)), gbest_by_iteration)
-    plt.xlabel('Número de iteración')
-    plt.ylabel('gbest')
-    plt.title(f'gbest hallado en cada iteración con {num_particles} partículas')
-    plt.show()
-
 plot_gbests_by_iteration(gbest_by_iteration, num_particles)
 
 '''
@@ -102,6 +97,7 @@ gbest, value, gbest_by_iteration = pso(
     w,
     inferior_limit,
     superior_limit,
+    optimization_criteria,
     verbose)
 
 print(f'La solución óptima encontrada es {gbest} y su imagen es {objective_function(gbest)}')
@@ -127,6 +123,7 @@ gbest, value, gbest_by_iteration = pso(
     w,
     inferior_limit,
     superior_limit,
+    optimization_criteria,
     verbose)
 
 print(f'La solución óptima encontrada es {gbest} y su imagen es {objective_function(gbest)}')
@@ -152,6 +149,7 @@ gbest, value, gbest_by_iteration = pso(
     w,
     inferior_limit,
     superior_limit,
+    optimization_criteria,
     verbose)
 
 print(f'La solución óptima encontrada es {gbest} y su imagen es {objective_function(gbest)}')

@@ -6,25 +6,35 @@ A . Transcribir el algoritmo en Python con los siguientes parámetros: número d
     partículas = 2, máximo número de iteraciones = 30, coeficientes de aceleración
     c1 = c2 = 1.49, peso de inercia w = 0.5.
 '''
-
 import sys
 import os
-import random
 import numpy as np
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from particle_swarm_optimization_algorithm import pso
 from matplotlib import pyplot as plt
 
-gbest, value = pso(objective_function=lambda x: np.sin(x) + np.sin(x**2),
-                   num_dimensions=1,
-                   num_particles=20,
-                   num_iterations=10,
-                   c1=1.49,
-                   c2=1.49,
-                   w=0.5,
-                   inferior_limit=0,
-                   superior_limit=10,
-                   verbose=True)
+objective_function = lambda x: np.sin(x) + np.sin(x**2)
+num_dimensions = 1
+num_particles = 2
+num_iterations = 30
+c1 = 1.49
+c2 = 1.49
+w = 0.5
+inferior_limit = 0
+superior_limit = 10
+verbose = True
+
+gbest, value, gbest_by_iteration = pso(
+    objective_function,
+    num_dimensions,
+    num_particles,
+    num_iterations,
+    c1,
+    c2,
+    w,
+    inferior_limit,
+    superior_limit,
+    verbose)
 
 '''
 B. Indicar la URL del repositorio en donde se encuentra el algoritmo PSO.
@@ -38,34 +48,127 @@ C. Graficar usando matplotlib la función objetivo y agregar un punto negro en
    donde el algoritmo haya encontrado el valor máximo. El gráfico debe contener
    etiquetas en los ejes, leyenda y un título.
 '''
-def plot_pso_run_results(gbest, gbests_by_iteration):
+def plot_pso_result(objective_function, gbest, num_particles):
     x = np.linspace(0, 10, 200)
-    y = lambda x: np.sin(x) + np.sin(x**2)
     plt.figure(figsize=(8, 6))
-    plt.plot(x, y(x))
-    if gbest is not None:
-        gbest_value = y(gbest)
-        plt.scatter(gbest, (gbest_value), color='black', zorder=5)
-        plt.text(
-            gbest,
-            gbest_value,
-            f'Máximo hallado en ({gbest}, {gbest_value})',
-            fontsize=12,
-            ha='right')
-    if gbests_by_iteration is not None:
-        for g in random.sample(gbests_by_iteration, k=15):
-            gbest_value = y(g)
-            plt.scatter(gbest, gbest_value, color='green', zorder=5)
+    plt.plot(x, objective_function(x))
+    gbest_value = objective_function(gbest)
+    plt.scatter(gbest, (gbest_value), color='black', zorder=5)
+    plt.text(
+        gbest,
+        gbest_value,
+        f'Máximo hallado en ({gbest}, {gbest_value})',
+        fontsize=12,
+        ha='right')
     plt.xlabel('x')
     plt.ylabel('y')
-    plt.title('y = sin(x) + sin(x^2)')
-    plt.legend()
-
+    plt.title(f'PSO sobre y = sin(x) + sin(x^2) con {num_particles} partículas')
     plt.grid(True)
     plt.show()
 
-plot_pso_run_results(gbest=gbest, gbests_by_iteration=None)
+plot_pso_result(objective_function, gbest, num_particles)
 
 '''
 D. Realizar un gráfico de línea que muestre gbest en función de las iteraciones realizadas.
+'''
+def plot_gbests_by_iteration(gbest_by_iteration, num_particles):
+    plt.plot(np.arange(0, len(gbest_by_iteration)), gbest_by_iteration)
+    plt.xlabel('Número de iteración')
+    plt.ylabel('gbest')
+    plt.title(f'gbest hallado en cada iteración con {num_particles} partículas')
+    plt.show()
+
+plot_gbests_by_iteration(gbest_by_iteration, num_particles)
+
+'''
+E. Transcribir la solución óptima encontrada (dominio) y el valor objetivo óptimo (imagen). 
+'''
+print(f'La solución óptima encontrada es {gbest} y su imagen es {objective_function(gbest)}')
+
+'''
+F. Incrementar el número de partículas a 4, ejecutar la rutina, transcribir la
+   solución óptima encontrada, transcribir el valor objetivo óptimo y realizar
+   nuevamente los gráficos solicitados en C y D.
+'''
+num_particles = 4
+
+gbest, value, gbest_by_iteration = pso(
+    objective_function,
+    num_dimensions,
+    num_particles,
+    num_iterations,
+    c1,
+    c2,
+    w,
+    inferior_limit,
+    superior_limit,
+    verbose)
+
+print(f'La solución óptima encontrada es {gbest} y su imagen es {objective_function(gbest)}')
+
+plot_pso_result(objective_function, gbest, num_particles)
+
+plot_gbests_by_iteration(gbest_by_iteration, num_particles)
+
+'''
+G. Incrementar el número de partículas a 6, ejecutar la rutina, transcribir la
+   solución óptima encontrada, transcribir el valor objetivo óptimo y realizar
+   nuevamente los gráficos solicitados en C y D.
+'''
+num_particles = 6
+
+gbest, value, gbest_by_iteration = pso(
+    objective_function,
+    num_dimensions,
+    num_particles,
+    num_iterations,
+    c1,
+    c2,
+    w,
+    inferior_limit,
+    superior_limit,
+    verbose)
+
+print(f'La solución óptima encontrada es {gbest} y su imagen es {objective_function(gbest)}')
+
+plot_pso_result(objective_function, gbest, num_particles)
+
+plot_gbests_by_iteration(gbest_by_iteration, num_particles)
+
+'''
+H. Incrementar el número de partículas a 10, ejecutar la rutina, transcribir la
+   solución óptima encontrada, transcribir el valor objetivo óptimo y realizar
+   nuevamente los gráficos solicitados en C y D. 
+'''
+num_particles = 10
+
+gbest, value, gbest_by_iteration = pso(
+    objective_function,
+    num_dimensions,
+    num_particles,
+    num_iterations,
+    c1,
+    c2,
+    w,
+    inferior_limit,
+    superior_limit,
+    verbose)
+
+print(f'La solución óptima encontrada es {gbest} y su imagen es {objective_function(gbest)}')
+
+plot_pso_result(objective_function, gbest, num_particles)
+
+plot_gbests_by_iteration(gbest_by_iteration, num_particles)
+
+'''
+I. Realizar observaciones/comentarios/conclusiones sobre los resultados obtenidos.
+
+En sucesivas ejecuciones del algoritmo empleando los diferentes números de partículas propuestos se
+observó que, conforme el número de éstas crece, disminuyen las chances de que PSO se atasque en un
+máximo local.
+En el intervalo propuesto por el ejercicio, que es [0, 10], hay un máximo local cuyo valor imagen es
+cercano al máximo global, aunque es menor a éste. En efecto, y(1.294) = 1.956, pero y(8.024) = 1.985.
+Un mayor número de partículas permitiría una mejor exploración del espacio de búsqueda, disminuyendo
+las probabilidades de atascarse en un óptimo local. Como desventaja, un número de partículas demasiado
+alto repercute negativamente en el costo computacional.
 '''

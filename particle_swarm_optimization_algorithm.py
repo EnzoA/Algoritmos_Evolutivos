@@ -22,6 +22,7 @@ def pso(objective_function,
         fitness_pbest[i] = objective_function(*[particles[i, j] for j in range(num_dimensions)])
 
     # Global best initialization.
+    gbest_by_iteration = []
     gbest = pbest[np.argmin(fitness_pbest)]
     fitness_gbest = np.min(fitness_pbest)
 
@@ -57,10 +58,12 @@ def pso(objective_function,
         if verbose:
             # Print each iteration's global best.
             print(f'Iteration number {iteracion + 1}: Global best position {gbest}, Value {fitness_gbest}')
+
+        gbest_by_iteration.append(gbest)
     
     if verbose:
         print('\nOptimal position:', gbest)
         print('Optimal value:', fitness_gbest)
 
-    # Return the global best and its fitness.
-    return gbest, fitness_gbest
+    # Return the global best, its fitness and the history of gbests by iteration.
+    return gbest, fitness_gbest, gbest_by_iteration

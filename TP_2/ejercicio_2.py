@@ -23,7 +23,7 @@ w = 0.5
 inferior_limit = 0
 superior_limit = 10
 optimization_criteria = OptimizationCriteria.Maximize
-verbose = True
+verbose = False
 
 gbest, value, gbest_by_iteration = pso(
     objective_function,
@@ -78,7 +78,7 @@ plot_gbests_by_iteration(gbest_by_iteration, num_particles)
 '''
 E. Transcribir la solución óptima encontrada (dominio) y el valor objetivo óptimo (imagen). 
 '''
-print(f'La solución óptima encontrada es {gbest} y su imagen es {objective_function(gbest)}')
+print(f'La solución óptima encontrada es {gbest} y su imagen es {objective_function(gbest)}. Número de partículas: {num_particles}')
 
 '''
 F. Incrementar el número de partículas a 4, ejecutar la rutina, transcribir la
@@ -100,7 +100,7 @@ gbest, value, gbest_by_iteration = pso(
     optimization_criteria,
     verbose)
 
-print(f'La solución óptima encontrada es {gbest} y su imagen es {objective_function(gbest)}')
+print(f'\nLa solución óptima encontrada es {gbest} y su imagen es {objective_function(gbest)} Número de partículas: {num_particles}')
 
 plot_pso_result(objective_function, gbest, num_particles)
 
@@ -126,7 +126,7 @@ gbest, value, gbest_by_iteration = pso(
     optimization_criteria,
     verbose)
 
-print(f'La solución óptima encontrada es {gbest} y su imagen es {objective_function(gbest)}')
+print(f'\nLa solución óptima encontrada es {gbest} y su imagen es {objective_function(gbest)} Número de partículas: {num_particles}')
 
 plot_pso_result(objective_function, gbest, num_particles)
 
@@ -152,7 +152,7 @@ gbest, value, gbest_by_iteration = pso(
     optimization_criteria,
     verbose)
 
-print(f'La solución óptima encontrada es {gbest} y su imagen es {objective_function(gbest)}')
+print(f'\nLa solución óptima encontrada es {gbest} y su imagen es {objective_function(gbest)} Número de partículas: {num_particles}')
 
 plot_pso_result(objective_function, gbest, num_particles)
 

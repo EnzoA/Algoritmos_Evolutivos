@@ -20,6 +20,7 @@ import numpy as np
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from particle_swarm_optimization_algorithm import pso, OptimizationCriteria, plot_gbests_by_iteration
 from matplotlib import pyplot as plt
+from pyswarm import pso as pyswarm_pso
 
 a = float(input('Ingresar valor del parámetro a'))
 assert -50 <= a <= 50, 'a debe pertenecer al intervalo [-50, 50]'
@@ -37,7 +38,7 @@ w = 0.7
 inferior_limit = -100
 superior_limit = 100
 optimization_criteria = OptimizationCriteria.Minimize
-verbose = True
+verbose = False
 
 gbest, value, gbest_by_iteration = pso(
     objective_function,
@@ -64,26 +65,29 @@ C. Graficar usando matplotlib la función objetivo f(x, y) y agregar un punto ro
    donde el algoritmo haya encontrado el valor mínimo. El gráfico debe contener
    etiquetas en los ejes, leyenda y un título.
 '''
-x = np.linspace(inferior_limit, superior_limit, 100)
-y = np.linspace(inferior_limit, superior_limit, 100)
-x, y = np.meshgrid(x, y)
-z = objective_function(x, y)
+def plot_pso_result_3d(objective_function, gbest, inferior_limit, superior_limit, a, b):
+    x = np.linspace(inferior_limit, superior_limit, 100)
+    y = np.linspace(inferior_limit, superior_limit, 100)
+    x, y = np.meshgrid(x, y)
+    z = objective_function(x, y)
 
-min_x = 0
-min_y = 0
-min_z = objective_function(gbest[0], gbest[1])
+    min_x = 0
+    min_y = 0
+    min_z = objective_function(gbest[0], gbest[1])
 
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-ax.plot_surface(x, y, z, cmap='viridis', alpha=0.7)
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot_surface(x, y, z, cmap='viridis', alpha=0.7)
 
-ax.scatter(min_x, min_y, min_z, color='r', s=25)
+    ax.scatter(min_x, min_y, min_z, color='r', s=25)
 
-ax.set_xlabel('x')
-ax.set_ylabel('y')
-ax.set_zlabel('f(x, y)')
-plt.title(f'PSO sobre f(x, y) = (x - {a})^2 + (y + {b})^2')
-plt.show()
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_zlabel('f(x, y)')
+    plt.title(f'PSO sobre f(x, y) = (x - {a})^2 + (y + {b})^2')
+    plt.show()
+
+plot_pso_result_3d(objective_function, gbest, inferior_limit, superior_limit, a, b)
 
 '''
 D. Realizar un gráfico de línea que muestre gbest en función de las iteraciones realizadas.
@@ -93,7 +97,7 @@ plot_gbests_by_iteration(gbest_by_iteration, num_particles)
 '''
 E. Transcribir la solución óptima encontrada (dominio) y el valor objetivo óptimo (imagen).
 '''
-print(f'La solución óptima encontrada es ({gbest[0]}, {gbest[1]}) y su imagen es {objective_function(*gbest)}')
+print(f'\nLa solución óptima encontrada es ({gbest[0]}, {gbest[1]}) y su imagen es {objective_function(*gbest)}. w={w}')
 
 '''
 F. Establecer el coeficiente de inercia w en 0, ejecutar el algoritmo y realizar
@@ -112,17 +116,58 @@ gbest, value, gbest_by_iteration = pso(
     superior_limit,
     optimization_criteria,
     verbose)
+print(f'\nLa solución óptima encontrada es ({gbest[0]}, {gbest[1]}) y su imagen es {objective_function(*gbest)}. w={w}')
 
 '''
 Reducir el coeficiente de inercia w a 0 implica que la velocidad de cada partícula en la iteración
 n no contribuye al determinar su velocidad en la iteración n+1. Esto hace que su movimiento sea más
 errático, lo que les da más libertad para explorar el espacio de soluciones pero también hace que el
 algoritmo sea más inestable y susceptible de no converger. También es posible que, sin w, el algoritmo
-converja prematuramente en un óptimo local, ya que el movimiento de las partículas se halla determinado
-por las mejores posiciones de cada iteración.
+converja prematuramente en un óptimo local, ya que de esa forma el movimiento de las partículas se halla
+determinado por las mejores posiciones de cada iteración. A pesar de esto, en sucesivas pruebas se
+observaron resultados más cercanos al mínimo cuando se usó w=0.
 '''
 
 '''
 G. Reescribir el algoritmo PSO para que cumpla nuevamente con los ítems A hasta
    F pero usando la biblioteca pyswarm (from pyswarm import pso).
+'''
+# Se redefine la misma función objetivo pero con la firma esperada por la librería pyswarm.
+objective_function = lambda x: (x[0] - a)**2 + (x[1] + b)**2
+w = 0.7
+gbest, value = pyswarm_pso(
+    func=objective_function,
+    lb=[inferior_limit, inferior_limit],
+    ub=[superior_limit, superior_limit],
+    swarmsize=num_particles,
+    omega=w,
+    phip=c1,
+    phig=c2,
+    maxiter=num_iterations
+)
+plot_pso_result_3d(lambda x, y: (x - a)**2 + (y + b)**2, gbest, inferior_limit, superior_limit, a, b)
+# NOTA: Respecto del punto "D. Realizar un gráfico de línea que muestre gbest en función de las iteraciones
+# realizadas", pso de pyswarm no retorna el histórico de gbests para cada iteración.
+print(f'\nLa solución óptima encontrada es ({gbest[0]}, {gbest[1]}) y su imagen es {objective_function(gbest)}. w={w}')
+
+# Con w = 0
+w = 0
+gbest, value = pyswarm_pso(
+    func=objective_function,
+    lb=[inferior_limit, inferior_limit],
+    ub=[superior_limit, superior_limit],
+    swarmsize=num_particles,
+    omega=w,
+    phip=c1,
+    phig=c2,
+    maxiter=num_iterations
+)
+plot_pso_result_3d(lambda x, y: (x - a)**2 + (y + b)**2, gbest, inferior_limit, superior_limit, a, b)
+print(f'\nLa solución óptima encontrada es ({gbest[0]}, {gbest[1]}) y su imagen es {objective_function(gbest)}. w={w}')
+
+'''
+En sucesivas pruebas no se observó una ventaja clara de alguna de las implementaciones de pso (la de pyswarm
+y la propia). Ambas versiones del algoritmo obtuvieron resultados comparables ante la tarea de minimizar
+f(x, y) = (x - a)^2 + (y + b)^2. Sí cabe destacar que con las dos variantes, eliminar el coeficiente
+de inercia w al igualarlo a 0 brindó soluciones más cercanas al mínimo de la función.
 '''

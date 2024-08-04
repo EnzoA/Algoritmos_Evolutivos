@@ -6,7 +6,6 @@ class OptimizationCriteria(Enum):
     Minimize = 1
     Maximize = 2
 
-
 def pso(objective_function,
         num_dimensions,
         num_particles,
@@ -85,4 +84,5 @@ def plot_gbests_by_iteration(gbest_by_iteration, num_particles):
     plt.xlabel('Número de iteración')
     plt.ylabel('gbest')
     plt.title(f'gbest hallado en cada iteración con {num_particles} partículas')
+    plt.legend([f'x{i + 1}' for i in range(len(gbest_by_iteration[0]))], loc='lower right')
     plt.show()

@@ -35,9 +35,6 @@ optimal_position, optimal_value, gbest_by_iteration = pso(objective_function,
 print(f'Solución óptima encontrada: x = {optimal_position[0]}')
 print(f'Valor objetivo óptimo: f(x) = {optimal_value}')
 
-# C. URL del repositorio: **[Este es un ejemplo, debes reemplazarlo por la URL real]**
-# https://github.com/tu-repositorio/pso
-
 # D. Graficar la función objetivo y el punto máximo encontrado.
 x = np.linspace(inferior_limit, superior_limit, 500)
 y = objective_function(x)

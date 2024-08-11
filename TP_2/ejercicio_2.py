@@ -23,7 +23,6 @@ w = 0.5
 inferior_limit = 0
 superior_limit = 10
 optimization_criteria = OptimizationCriteria.Maximize
-verbose = False
 
 gbest, value, gbest_by_iteration = pso(
     objective_function,
@@ -35,8 +34,7 @@ gbest, value, gbest_by_iteration = pso(
     w,
     inferior_limit,
     superior_limit,
-    optimization_criteria,
-    verbose)
+    optimization_criteria)
 
 '''
 B. Indicar la URL del repositorio en donde se encuentra el algoritmo PSO.
@@ -97,8 +95,7 @@ gbest, value, gbest_by_iteration = pso(
     w,
     inferior_limit,
     superior_limit,
-    optimization_criteria,
-    verbose)
+    optimization_criteria)
 
 print(f'\nLa solución óptima encontrada es {gbest} y su imagen es {objective_function(gbest)} Número de partículas: {num_particles}')
 
@@ -123,8 +120,7 @@ gbest, value, gbest_by_iteration = pso(
     w,
     inferior_limit,
     superior_limit,
-    optimization_criteria,
-    verbose)
+    optimization_criteria)
 
 print(f'\nLa solución óptima encontrada es {gbest} y su imagen es {objective_function(gbest)} Número de partículas: {num_particles}')
 
@@ -149,8 +145,7 @@ gbest, value, gbest_by_iteration = pso(
     w,
     inferior_limit,
     superior_limit,
-    optimization_criteria,
-    verbose)
+    optimization_criteria)
 
 print(f'\nLa solución óptima encontrada es {gbest} y su imagen es {objective_function(gbest)} Número de partículas: {num_particles}')
 

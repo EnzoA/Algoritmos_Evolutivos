@@ -28,7 +28,7 @@ optimal_position, optimal_value, gbest_by_iteration = pso(objective_function,
                                                           w=w,
                                                           inferior_limit=inferior_limit,
                                                           superior_limit=superior_limit,
-                                                          optimization_criteria='max',
+                                                          optimization_criteria=OptimizationCriteria.Maximize,
                                                           verbose=True)
 
 # B. Solución óptima.
@@ -78,7 +78,7 @@ for count in particle_counts:
                                    w=w,
                                    inferior_limit=inferior_limit,
                                    superior_limit=superior_limit,
-                                   optimization_criteria='max')
+                                   optimization_criteria=OptimizationCriteria.Maximize)
     plt.plot(range(num_iterations), gbest_by_iteration, label=f'{count} partículas')
 
 # Etiquetas y título

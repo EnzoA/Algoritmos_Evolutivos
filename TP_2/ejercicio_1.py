@@ -2,7 +2,7 @@ import sys
 import os
 import numpy as np
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from particle_swarm_optimization_algorithm import pso, OptimizationCriteria, plot_gbests_by_iteration
+from particle_swarm_optimization_algorithm import pso, OptimizationCriteria
 from matplotlib import pyplot as plt
 
 # Definir la función objetivo.

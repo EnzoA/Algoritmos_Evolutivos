@@ -30,8 +30,12 @@ def pso(objective_function,
 
     # Global best initialization.
     gbest_by_iteration = []
-    gbest = pbest[np.argmin(fitness_pbest)]
-    fitness_gbest = np.min(fitness_pbest)
+    gbest = (pbest[np.argmax(fitness_pbest)]
+             if optimization_criteria == OptimizationCriteria.Maximize
+             else pbest[np.argmin(fitness_pbest)])
+    fitness_gbest = (np.max(fitness_pbest)
+                     if optimization_criteria == OptimizationCriteria.Maximize
+                     else np.min(fitness_pbest))
 
     # Search.
     for iteracion in range(num_iterations):

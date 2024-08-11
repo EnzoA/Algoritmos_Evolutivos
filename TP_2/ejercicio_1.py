@@ -59,10 +59,15 @@ plt.legend()
 plt.grid(True)
 plt.show()
 
-# F. Graficar gbest para diferentes números de partículas.
+# Inicializar la figura
+plt.figure(figsize=(10, 6))
+
+# Graficar gbest en función de las iteraciones realizadas para 2 partículas
+plt.plot(range(num_iterations), gbest_by_iteration, color='blue', label='PSO con 2 partículas')
+
+# Graficar gbest para diferentes números de partículas
 particle_counts = [4, 10, 100, 200, 400]
 
-plt.figure(figsize=(10, 6))
 for count in particle_counts:
     _, _, gbest_by_iteration = pso(objective_function,
                                    num_dimensions=1,
@@ -74,12 +79,20 @@ for count in particle_counts:
                                    inferior_limit=inferior_limit,
                                    superior_limit=superior_limit,
                                    optimization_criteria='max')
-    plt.plot(range(num_iterations), gbest_by_iteration, label=f'{count} particles')
+    plt.plot(range(num_iterations), gbest_by_iteration, label=f'{count} partículas')
 
-plt.xlabel('Iteracion')
+# Etiquetas y título
+plt.xlabel('Iteración')
 plt.ylabel('Global Best (gbest)')
-plt.title('Global Best (gbest) vs. Iterations for Different Particle Counts')
+plt.title('Global Best (gbest) vs. Iteraciones para diferentes números de partículas')
 plt.legend()
 plt.grid(True)
+
+# Mostrar el gráfico
 plt.show()
+
+
+
+
+
 

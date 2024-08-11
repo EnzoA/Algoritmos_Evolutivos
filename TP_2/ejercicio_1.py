@@ -40,21 +40,21 @@ x = np.linspace(inferior_limit, superior_limit, 500)
 y = objective_function(x)
 
 plt.figure(figsize=(10, 6))
-plt.plot(x, y, label='Objective function: $f(x) = 2\sin(x) - \\frac{x^2}{2}$')
+plt.plot(x, y, label='Funcion objetivo: $f(x) = 2\sin(x) - \\frac{x^2}{2}$')
 plt.scatter(optimal_position, optimal_value, color='green', label='Optimal solution', zorder=5)
 plt.xlabel('x')
 plt.ylabel('f(x)')
-plt.title('Objective Function and Optimal Solution')
+plt.title('Funcion objetivo y solucion optima')
 plt.legend()
 plt.grid(True)
 plt.show()
 
 # E. Graficar gbest en función de las iteraciones realizadas.
 plt.figure(figsize=(10, 6))
-plt.plot(range(num_iterations), gbest_by_iteration, color='blue', label='PSO with 2 particles')
-plt.xlabel('Iteration')
+plt.plot(range(num_iterations), gbest_by_iteration, color='blue', label='PSO con 2 particulas')
+plt.xlabel('Iteracion')
 plt.ylabel('Global Best (gbest)')
-plt.title('Global Best (gbest) vs. Iterations')
+plt.title('Global Best (gbest) vs. Iteraciones')
 plt.legend()
 plt.grid(True)
 plt.show()
@@ -72,10 +72,11 @@ for count in particle_counts:
                                    c2=c2,
                                    w=w,
                                    inferior_limit=inferior_limit,
-                                   superior_limit=superior_limit)
+                                   superior_limit=superior_limit,
+                                   optimization_criteria='max')
     plt.plot(range(num_iterations), gbest_by_iteration, label=f'{count} particles')
 
-plt.xlabel('Iteration')
+plt.xlabel('Iteracion')
 plt.ylabel('Global Best (gbest)')
 plt.title('Global Best (gbest) vs. Iterations for Different Particle Counts')
 plt.legend()

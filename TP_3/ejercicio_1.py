@@ -52,19 +52,6 @@ gbest, value, gbest_by_iteration = pso(
     restriction_functions)
 
 '''
-TODO: ELIMINAR
-Por método Simplex, la solución óptima es Z = 113600
-a = 0
-b = 19200
-c = 12800
-d = 0
-'''
-
-# TODO: ELIMINAR
-#print('Restricción 1:', (lambda a, b, c, d: 2.5 * a + 1.5 * b + 2.75 * c + 2.0 * d)(*[int(gbest[i]) for i in range(num_dimensions)]))
-#print('Restricción 2:', (lambda a, b, c, d: 3.5 * a + 3.0 * b + 3.0 * c + 2.0 * d)(*[int(gbest[i]) for i in range(num_dimensions)]))
-
-'''
 B. Transcribir al .pdf la solución óptima encontrada (dominio) y el valor objetivo óptimo (imagen).
 '''
 print(f'\nLa solución óptima encontrada es ' +

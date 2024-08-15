@@ -30,7 +30,7 @@ c1 = 1.4944
 c2 = 1.4944
 w = 0.6
 inferior_limit = 0
-superior_limit = 100
+superior_limit = 200
 optimization_criteria = OptimizationCriteria.Maximize
 restriction_functions = [
     lambda a, b, c, d: a >= 0.0 and b >= 0.0 and c >= 0.0 and d >= 0.0,

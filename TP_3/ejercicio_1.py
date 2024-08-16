@@ -74,3 +74,36 @@ D. Realizar un gráfico de línea que muestre gbest (eje de ordenadas) en funci�
    los ejes, leyenda y un título. El gráfico debe ser pegado en el .pdf.
 '''
 plot_gbests_by_iteration(gbest_by_iteration, num_particles)
+
+'''
+E. Explicar (en el .pdf) y demostrar (desde el código fuente) que sucede si se reduce en 1 unidad el tiempo de acabado
+de la parte B.
+'''
+
+restriction_functions = [
+    lambda a, b, c, d: a >= 0.0 and b >= 0.0 and c >= 0.0 and d >= 0.0,
+    lambda a, b, c, d: 2.5 * a + 1.5 * b + 2.75 * c + 2.0 * d <= 640.0,
+    lambda a, b, c, d: 3.5 * a + 2.0 * b + 3.0 * c + 2.0 * d <= 960.0
+]
+
+gbest, value, gbest_by_iteration = pso(
+    objective_function,
+    num_dimensions,
+    num_particles,
+    num_iterations,
+    c1,
+    c2,
+    w,
+    inferior_limit,
+    superior_limit,
+    optimization_criteria,
+    restriction_functions)
+
+print(f'\nLa solución óptima encontrada es ' +
+      f'A={100 * int(gbest[0])}, ' +
+      f'B={100 * int(gbest[1])}, ' +
+      f'C={100 * int(gbest[2])} y ' +
+      f'D={100 * int(gbest[3])}. ' +
+      f'Su imagen es {objective_function(*[int(x) for x in gbest])}.')
+
+plot_gbests_by_iteration(gbest_by_iteration, num_particles)
